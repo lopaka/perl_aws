@@ -24,7 +24,7 @@ foreach $volume_id (keys(%volumes)) {
   $description = $volumes{$volume_id};
   $snapshot = $ec2->create_snapshot(
                 VolumeId => $volume_id,
-                Description => $description
+                Description => "${description}-${date}"
               );
   $ec2->create_tags(
     ResourceId => $snapshot->{snapshot_id},
