@@ -8,9 +8,19 @@ use POSIX qw/strftime/;
 
 my $date = strftime "%Y%m%d", localtime;
 my $snapshot_id;
-my $config = LoadFile('.settings.yml');
 my %volumes;
 my $volume_id;
+
+# Example of settings YAML file
+# ---
+# region: us-west-2
+# AWSAccessKeyId: ACCESSKEYID
+# SecretAccessKey: SECRETKEYID
+# volumes:
+#   vol-abcdefgh: vol1-description-name
+#   vol-12345678: vol2-description-name
+
+my $config = LoadFile('.settings.yml');
 
 my $ec2 = Net::Amazon::EC2->new(
   region => $config->{region},
