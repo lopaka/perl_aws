@@ -6,6 +6,7 @@ use Net::Amazon::EC2;
 use YAML::XS qw/LoadFile/;
 use POSIX qw/strftime/;
 
+my $config_file = '/usr/local/etc/aws_snapshot.yml';
 my $date = strftime "%Y%m%d", localtime;
 my $snapshot_id;
 my %volumes;
@@ -20,7 +21,7 @@ my $volume_id;
 #   vol-abcdefgh: vol1-description-name
 #   vol-12345678: vol2-description-name
 
-my $config = LoadFile('.settings.yml');
+my $config = LoadFile($config_file);
 
 my $ec2 = Net::Amazon::EC2->new(
   region => $config->{region},
