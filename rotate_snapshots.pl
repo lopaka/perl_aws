@@ -15,6 +15,9 @@ my $ownerid = $config->{OwnerID};
 my @sorted;
 my $keep_counter;
 
+# The number of snapshots to keep
+my $snapshots_to_keep = 60;
+
 my %snapshot_volume_ids;
 
 my $ec2 = Net::Amazon::EC2->new(
@@ -37,7 +40,7 @@ foreach $snapshot (@$snapshots) {
 
 foreach $snapshot_volume_id (keys(%volumes)) {
   # reset counter
-  $keep_counter = 60;
+  $keep_counter = $snapshots_to_keep;
 
   print $snapshot_volume_id . " " . $volumes{$snapshot_volume_id} . "\n";
 
