@@ -12,6 +12,7 @@ my $snapshot_date;
 my $config = LoadFile($config_file);
 my %volumes = %{$config->{volumes}};
 my $ownerid = $config->{OwnerID};
+my @skip_snaps = @{$config->{skip_snaps}};
 my @sorted;
 my $keep_counter;
 
@@ -48,12 +49,15 @@ foreach $snapshot_volume_id (keys(%volumes)) {
   @sorted = sort {$b cmp $a} (@{$snapshot_volume_ids{$snapshot_volume_id}});
 
   foreach $snapshot (@sorted) {
+    ($snapshot_date, $snapshot_id) = split(/\t/,$snapshot);
     if ($keep_counter > 0) {
       print "$keep_counter $snapshot\n";
       $keep_counter--;
     }
+    elsif ( grep( /^${snapshot_id}$/, @skip_snaps )) {
+      print "$snapshot_id - skipping as configured\n";
+    }
     else {
-      ($snapshot_date, $snapshot_id) = split(/\t/,$snapshot);
       print "DELETING snapshot of $volumes{$snapshot_volume_id} - $snapshot_date ID=$snapshot_id - ";
       $delete_snapshot = $ec2->delete_snapshot(SnapshotId => $snapshot_id);
       if ($delete_snapshot) {
